@@ -1,14 +1,13 @@
 """ Simple pinging module """
-import concurrent.futures
-import logging
-from logging import INFO, Logger
+from concurrent.futures import ThreadPoolExecutor
+from logging import INFO, Logger, basicConfig, getLogger
 from subprocess import run, CalledProcessError, DEVNULL
 
 
 def create_logger() -> Logger:
     """ Return custom logger """
-    logging.basicConfig(format='%(message)s', level=INFO)
-    return logging.getLogger('pypinger')
+    basicConfig(format='%(message)s', level=INFO)
+    return getLogger('pypinger')
 
 
 def ping(host: str, failed: list) -> bool:
@@ -38,7 +37,7 @@ if __name__ == '__main__':
 
     failures = []
     hostnames = ['www.google.com', 'junk.junk', 'www.yahoo.com']
-    with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+    with ThreadPoolExecutor(max_workers=100) as executor:
         for hostname in hostnames:
             executor.submit(ping, hostname, failures)
 
