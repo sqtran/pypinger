@@ -1,7 +1,6 @@
+""" Simple pinging module """
 import concurrent.futures
 import logging
-import os
-import sys
 from logging import INFO, Logger
 from subprocess import run, CalledProcessError, DEVNULL
 
@@ -23,7 +22,7 @@ def ping(host: str, failed: list) -> bool:
         return False
 
 
-def print_output(log, failed: list):
+def print_output(log: Logger, failed: list):
     """ Print out failures """
     if len(failed) == 0:
         log.info('No errors')
@@ -38,10 +37,10 @@ if __name__ == '__main__':
     logger.debug('start')
 
     failures = []
-    ips = ['www.google.com', 'junk.junk', 'www.yahoo.com']
+    hostnames = ['www.google.com', 'junk.junk', 'www.yahoo.com']
     with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
-        for ip in ips:
-            executor.submit(ping, ip, failures)
+        for hostname in hostnames:
+            executor.submit(ping, hostname, failures)
 
     print_output(logger, failures)
     logger.debug('end')
